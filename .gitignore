@@ -1,0 +1,10 @@
+.idea/
+.vscode/
+.cache/
+dist
+node_modules/
+test_bundle/
+.DS_Store
+npm-debug.log
+coverage/
+rollup.build.css

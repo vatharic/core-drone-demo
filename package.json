@@ -1,0 +1,54 @@
+{
+  "name": "core-iot-app",
+  "version": "0.0.1",
+  "description": "a web application for demoing qlik core capabilities at qonnections 2019",
+  "main": "index.js",
+  "scripts": {
+    "watch": "rollup -c --watch",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm run watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aihazm/core-iot-app.git"
+  },
+  "keywords": [
+    "qlik",
+    "core",
+    "iot",
+    "ai",
+    "bi",
+    "augmented",
+    "intelligence"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/aihazm/core-iot-app/issues"
+  },
+  "homepage": "https://github.com/aihazm/core-iot-app#readme",
+  "devDependencies": {
+    "@babel/core": "^7.4.0",
+    "@babel/preset-env": "^7.4.2",
+    "babel-plugin-transform-custom-element-classes": "^0.1.0",
+    "eslint": "^5.15.3",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-lit": "^0.6.0",
+    "rollup": "^1.7.0",
+    "rollup-plugin-babel": "^4.3.2",
+    "rollup-plugin-copy-glob": "^0.3.0",
+    "rollup-plugin-fill-html": "^1.1.0",
+    "rollup-plugin-livereload": "^1.0.0",
+    "rollup-plugin-node-resolve": "^4.0.1",
+    "rollup-plugin-serve": "^1.0.1",
+    "rollup-plugin-string": "^3.0.0",
+    "rollup-plugin-commonjs": "^9.2.1"
+  },
+  "dependencies": {
+    "enigma.js": "^2.4.0",
+    "lit-element": "^2.1.0"
+  },
+  "browserslist": [
+    "last 2 versions"
+  ]
+}
