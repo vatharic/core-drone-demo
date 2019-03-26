@@ -16,34 +16,19 @@
 
 <body>
   <div class="grid-container" id="root">
-    <div><iframe id="x-video" width="100%" height="100%"
-        src="https://www.youtube.com/embed/QZOZV7ugBas?controls=0&version=3&enablejsapi=1" frameborder="0"
-        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
-    <div class="grid-info">
-      <table>
-        <tr>
-          <td>
-            <div class="info_1"><span id="general_info"></span></div>
-          </td>
-          <td>
-            <div class="info_2"><span id="hospital_info"></span></div>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <div class="info_3"></div>
-          </td>
-          <td>
-            <div class="info_4"></div>
-          </td>
-        </tr>
-      </table>
+    <div class="video_container">
+      <iframe id="x-video" width="100%" height="100%"
+        src="https://www.youtube.com/embed/QZOZV7ugBas?controls=0&version=3&enablejsapi=1&mute=1" frameborder="0"
+        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+      </iframe>
     </div>
-    <div id="map"></div>
-    <div>
-      <div id="console">
-        <pre><code></code></pre>
-      </div>
+    <div id="general_info" class="info1_container"><span></span></div>
+    <div id="hospital_info" class="info2_container"><span></span></div>
+    <div class="info3_container"></div>
+    <div class="info4_container"></div>
+    <div id="map" class="map_container"></div>
+    <div id="console" class="rec_container">
+      <pre><code></code></pre>
     </div>
   </div>
   <script type="text/javascript">
