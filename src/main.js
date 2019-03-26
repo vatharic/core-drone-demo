@@ -12,25 +12,37 @@ const map = new google.maps.Map(mapEl, {
 });
 const video = document.getElementById('x-video');
 let player;
-window.onYouTubeIframeAPIReady = function() {
+window.onYouTubeIframeAPIReady = function () {
   player = new YT.Player('x-video', {
-      events: {
-        'onReady': onPlayerReady,
-        // 'onStateChange': onPlayerStateChange
-      }
+    playerVars: {
+      'autoplay': 0,
+      'controls': 0,
+      'rel' : 0,
+      'fs' : 0,
+  },
+    events: {
+      'onReady': onPlayerReady,
+      'onStateChange': onPlayerStateChange
+    }
   });
 }
-
+let started = false;
 function onPlayerReady(event) {
-  event.target.playVideo();
+
+}
+function onPlayerStateChange(event) {
+  if (!started) {
+    start();
+    event.target.playVideo();
+  }
 }
 const start = () => {
-
+  started = true;
   //// MQTT comm
   mqtt.init();
   mqtt.connect();
   mqtt.subscribe('test-topic');
-  mqtt.publish('test-topic', {cmd: 'alarm'});
+  mqtt.publish('test-topic', { cmd: 'alarm' });
   mqtt.unsubscribe('tes-topic');
   mqtt.disconnect();
 
@@ -59,30 +71,30 @@ const start = () => {
     map: map
   });
   animateCircle(line).then(() => {
-    document.getElementById('general_info').innerHTML = '<h3>Incident Found !!!</h3>\nat<br/> >> Lat: 32.9557\n<br/> >> Lng: -97.0664926';
-    getNearestHospitals().then(res=>{
-      var hospitalsName = res.map(hospital=>{
+    document.querySelector('#general_info > span').innerHTML = '<h3>Incident Found !!!</h3>\nat<br/> >> Lat: 32.9557\n<br/> >> Lng: -97.0664926';
+    getNearestHospitals().then(res => {
+      var hospitalsName = res.map(hospital => {
         return hospital.name;
       });
       let html = `
       <h3>Nearest hospital:</h3>
       <ul>
-      ${hospitalsName.map(name=>{
-          return `<li>${name}</li>`;
-        }).join('\n')}
+      ${hospitalsName.map(name => {
+        return `<li>${name}</li>`;
+      }).join('\n')}
       </ul>
       `;
-      document.getElementById('hospital_info').innerHTML = html;
+      document.querySelector('#hospital_info > span').innerHTML = html;
 
-      getCurrentSelectionsModel().then(model=>{
+      getCurrentSelectionsModel().then(model => {
         model.getLayout();
         model.on('changed', (x) => {
           model.getLayout().then(layout => {
-            console.log(layout);
+            // console.log(layout);
           })
         });
       });
-      getField('NAME').then(field=>{
+      getField('NAME').then(field => {
         field.select(hospitalsName[0], false);
       });
 
@@ -121,5 +133,5 @@ function getNearestHospitals() {
   });
 }
 
-start();
+
 
