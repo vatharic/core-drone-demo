@@ -80,8 +80,14 @@ body{
   overflow: hidden;
 } */
 div[class^="info"] > span{
-  display: inline-block;
-  padding:20px;
+  display: block;
+  padding:10px 20px;
+  text-align: center;
+  font-size: 46px;
+  font-weight: bold;
+}
+div[class^="info"] h3, .rec_container h3{
+  text-align: center;
 }
 #console > pre {
   padding:20px;
