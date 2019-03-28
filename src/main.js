@@ -2,14 +2,47 @@ import * as mapStyles from './map-styles';
 import { getField, getCurrentSelectionsModel } from './enigma/models';
 import * as mqtt from './mqtt';
 
+
+//4041 Moodie Dr Richmond, ON K0A 2Z0 Canada -- 45.2184704,-75.7655448
 const mapEl = document.querySelector('#map');
+const directionService = new google.maps.DirectionsService();
+const directionsDisplay = new google.maps.DirectionsRenderer();
 const map = new google.maps.Map(mapEl, {
-  center: new self.google.maps.LatLng(32.9546827, -97.0666535, 17),
-  zoom: 16,
+  center: new self.google.maps.LatLng(45.2184704, -75.7655448, 17),
+  zoom: 15,
   mapTypeId: google.maps.MapTypeId.ROADMAP,
   disableDefaultUI: true,
   styles: mapStyles.default
 });
+directionsDisplay.setMap(map);
+const ambulance = new google.maps.Marker({//45.208779,-75.7684255
+  position: new self.google.maps.LatLng(45.208779, -75.7684255, 17),
+  title:"Hello World!"
+});
+
+ambulance.setMap(map);
+console.log(ambulance)
+
+const travelMode = google.maps.DirectionsTravelMode.DRIVING;
+const request = {
+  origin: { lat: 45.208779,lng: -75.7684255},
+  destination: { lat: 45.2184666, lng: -75.7655501 },//45.2184666,-75.7655501
+  travelMode: travelMode
+};
+directionService.route(request, function(response, status) {
+  if (status === 'OK') {
+    console.log('tadam', response)
+    directionsDisplay.setDirections(response);
+  } else {
+    window.alert('Directions request failed due to ' + status);
+  }
+}, {
+  sursuppressMarkers: true,
+  preserveViewport: true
+});
+
+
+
 const video = document.getElementById('x-video');
 let player;
 window.onYouTubeIframeAPIReady = function () {
