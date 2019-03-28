@@ -71,7 +71,8 @@ const start = () => {
     map: map
   });
   animateCircle(line).then(() => {
-    document.querySelector('#general_info > span').innerHTML = '<h3>Incident Found !!!</h3>\nat<br/> >> Lat: 32.9557\n<br/> >> Lng: -97.0664926';
+    //document.querySelector('#general_info > span').innerHTML = '<h3>Incident Found !!!</h3>\nat<br/> >> Lat: 32.9557\n<br/> >> Lng: -97.0664926';
+    console.log('<h3>Incident Found !!!</h3>\nat<br/> >> Lat: 32.9557\n<br/> >> Lng: -97.0664926');
     getNearestHospitals().then(res => {
       var hospitalsName = res.map(hospital => {
         return hospital.name;
@@ -84,8 +85,8 @@ const start = () => {
       }).join('\n')}
       </ul>
       `;
-      document.querySelector('#hospital_info > span').innerHTML = html;
-
+      // document.querySelector('#hospital_info > span').innerHTML = html;
+      console.log(html);
       getCurrentSelectionsModel().then(model => {
         model.getLayout();
         model.on('changed', (x) => {
