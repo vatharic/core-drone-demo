@@ -1,4 +1,4 @@
-const MQTT_URL = 'ws://test.mosquitto.org:8080/mqtt';
+const MQTT_URL = 'wss://test.mosquitto.org:8081/mqtt';
 let mosq;
 
 const elConsole = document.querySelector('#console code');
