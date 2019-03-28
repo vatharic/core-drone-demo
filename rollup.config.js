@@ -33,13 +33,13 @@ export default [{
           },
           useBuiltIns: 'usage',
           modules: false,
-          debug: process.env.NODE_ENV === 'production',
+          debug: process.env.NODE_ENV !== 'production',
         }],
       ],
     }),
     copy([
       { files: 'src/*.{html,css}', dest: 'dist' },
-    ], { verbose: true, watch: true }),
+    ], (process.env.NODE_ENV !== 'production' && { verbose: true, watch: true })),
     string({
       include: ['**/*.css', '**/*.json'],
     }),
