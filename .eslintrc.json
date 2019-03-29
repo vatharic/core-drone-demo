@@ -6,8 +6,7 @@
   "globals": {
     "WebSocket": true,
     "document": true,
-    "expect": true,
-    "chai": true
+    "google": true
   },
   "plugins": [
     "lit"
