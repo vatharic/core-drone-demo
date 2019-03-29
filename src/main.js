@@ -1,15 +1,8 @@
-import * as mapStyles from './map-styles';
+// import * as mapStyles from './components/map-styles';
 import { getField, getCurrentSelectionsModel } from './enigma/models';
 import * as mqtt from './mqtt';
+import { getNearestHospitals } from './components/map';
 
-const mapEl = document.querySelector('#map');
-const map = new google.maps.Map(mapEl, {
-  center: new self.google.maps.LatLng(32.9546827, -97.0666535, 17),
-  zoom: 16,
-  mapTypeId: google.maps.MapTypeId.ROADMAP,
-  disableDefaultUI: true,
-  styles: mapStyles.default
-});
 const video = document.getElementById('x-video');
 let player;
 window.onYouTubeIframeAPIReady = function () {
@@ -17,27 +10,27 @@ window.onYouTubeIframeAPIReady = function () {
     playerVars: {
       'autoplay': 0,
       'controls': 0,
-      'rel' : 0,
-      'fs' : 0,
-  },
+      'rel': 0,
+      'fs': 0,
+    },
     events: {
       'onReady': onPlayerReady,
       'onStateChange': onPlayerStateChange
     }
   });
 }
-let started = false;
+
 function onPlayerReady(event) {
 
 }
 function onPlayerStateChange(event) {
-  if (!started) {
+  // if (!started) {
     start();
     event.target.playVideo();
-  }
+  // }
 }
 const start = () => {
-  started = true;
+  // started = true;
   //// MQTT comm
   mqtt.init();
   mqtt.connect();
@@ -118,21 +111,7 @@ function animateCircle(line) {
   });
 }
 
-function getNearestHospitals() {
-  return new Promise(resolve => {
-    const placeService = new google.maps.places.PlacesService(map);
-    const request = {
-      location: { lat: 32.9557, lng: -97.0664926 }, // last position of the drone
-      // radius: 5000,
-      keyword: 'hospital',
-      rankBy: google.maps.places.RankBy.DISTANCE,
-      type: ['hospital'/*, 'police', 'fire_station'*/] // supported types can be found here -> https://developers.google.com/places/supported_types
-    }
-    placeService.nearbySearch(request, res => {
-      resolve(res);
-    });
-  });
-}
+
 
 
 
