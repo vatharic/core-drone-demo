@@ -41,7 +41,7 @@ export default [{
       { files: 'src/*.{html,css}', dest: 'dist' },
     ], (process.env.NODE_ENV !== 'production' && { verbose: true, watch: true })),
     string({
-      include: ['**/*.css', '**/*.json'],
+      include: ['**/*.css', '**/*.json', '**/*.svg'],
     }),
     (process.env.NODE_ENV !== 'production' && serve({ contentBase: ['dist'], open: true, historyApiFallback: true })),
     (process.env.NODE_ENV !== 'production' && livereload({ watch: 'dist' })),
