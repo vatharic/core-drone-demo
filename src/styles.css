@@ -27,8 +27,6 @@ body{
 }
 .grid-container > div{
   background-color: #1D2C4D;
-  /* overflow:hidden;
-  border-radius:5px; */
 }
 .video_container {
   grid-column-start: 1;
@@ -69,22 +67,13 @@ body{
   grid-row-start: 3;
   grid-row-end: 5;
 }
-
-/* div[class^="info"] {
-  font-family: monospace;
-  color: #757575;
-
-  min-height:100%;
-  border-radius:5px;
-  border: 2px solid black;
-  overflow: hidden;
-} */
 div[class^="info"] > span{
   display: block;
-  padding:10px 20px;
+  padding:20px;
   text-align: center;
-  font-size: 46px;
-  font-weight: bold;
+  font-size: 15vh;
+  top: 50%;
+  margin-top: -37px;
 }
 div[class^="info"] h3, .rec_container h3{
   text-align: center;
