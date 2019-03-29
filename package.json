@@ -1,17 +1,19 @@
 {
-  "name": "core-iot-app",
+  "name": "core-drone-demo",
   "version": "0.0.1",
   "description": "a web application for demoing qlik core capabilities at qonnections 2019",
   "main": "index.js",
   "scripts": {
     "watch": "rollup -c --watch",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "start": "npm run watch",
     "build": "cross-env NODE_ENV=production rollup -c"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aihazm/core-iot-app.git"
+    "url": "git+https://github.com/aihazm/core-drone-demo.git"
   },
   "keywords": [
     "qlik",
@@ -25,9 +27,9 @@
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/aihazm/core-iot-app/issues"
+    "url": "https://github.com/aihazm/core-drone-demo/issues"
   },
-  "homepage": "https://github.com/aihazm/core-iot-app#readme",
+  "homepage": "https://github.com/aihazm/core-drone-demo#readme",
   "devDependencies": {
     "@babel/core": "^7.4.0",
     "@babel/preset-env": "^7.4.2",
@@ -35,6 +37,7 @@
     "cross-env": "^5.2.0",
     "eslint": "^5.15.3",
     "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-lit": "^0.6.0",
     "rollup": "^1.7.0",
     "rollup-plugin-babel": "^4.3.2",

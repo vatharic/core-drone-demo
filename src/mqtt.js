@@ -5,15 +5,13 @@ const elConsole = document.querySelector('#console code');
 
 const init = () => {
   mosq = mosq || new Mosquitto();
-  elConsole.innerHTML +=  'MQTT initialized...\n';
-}
+  elConsole.innerHTML += 'MQTT initialized...\n';
+};
 
-const connect = () => {
-  return mosq.connect(MQTT_URL);
-}
+const connect = () => mosq.connect(MQTT_URL);
 
 const disconnect = () => {
-  elConsole.innerHTML +=  'MQTT Disconnected...\n';
+  elConsole.innerHTML += 'MQTT Disconnected...\n';
   mosq.disconnect();
 };
 const subscribe = (topic) => {
@@ -35,5 +33,5 @@ export {
   subscribe,
   unsubscribe,
   publish,
-  init
-}
+  init,
+};

@@ -8,30 +8,30 @@ let player;
 window.onYouTubeIframeAPIReady = function () {
   player = new YT.Player('x-video', {
     playerVars: {
-      'autoplay': 0,
-      'controls': 0,
-      'rel': 0,
-      'fs': 0,
+      autoplay: 0,
+      controls: 0,
+      rel: 0,
+      fs: 0,
     },
     events: {
-      'onReady': onPlayerReady,
-      'onStateChange': onPlayerStateChange
-    }
+      onReady: onPlayerReady,
+      onStateChange: onPlayerStateChange,
+    },
   });
-}
+};
 
 function onPlayerReady(event) {
 
 }
 function onPlayerStateChange(event) {
   // if (!started) {
-    start();
-    event.target.playVideo();
+  start();
+  event.target.playVideo();
   // }
 }
 const start = () => {
   // started = true;
-  //// MQTT comm
+  // // MQTT comm
   mqtt.init();
   mqtt.connect();
   mqtt.subscribe('test-topic');
@@ -42,7 +42,7 @@ const start = () => {
   const lineSymbol = {
     path: google.maps.SymbolPath.CIRCLE,
     scale: 8,
-    strokeColor: '#393'
+    strokeColor: '#393',
   };
 
   const line = new google.maps.Polyline({
@@ -59,59 +59,49 @@ const start = () => {
     ],
     icons: [{
       icon: lineSymbol,
-      offset: '100%'
+      offset: '100%',
     }],
-    map: map
+    map,
   });
   animateCircle(line).then(() => {
-    //document.querySelector('#general_info > span').innerHTML = '<h3>Incident Found !!!</h3>\nat<br/> >> Lat: 32.9557\n<br/> >> Lng: -97.0664926';
+    // document.querySelector('#general_info > span').innerHTML = '<h3>Incident Found !!!</h3>\nat<br/> >> Lat: 32.9557\n<br/> >> Lng: -97.0664926';
     console.log('<h3>Incident Found !!!</h3>\nat<br/> >> Lat: 32.9557\n<br/> >> Lng: -97.0664926');
-    getNearestHospitals().then(res => {
-      var hospitalsName = res.map(hospital => {
-        return hospital.name;
-      });
-      let html = `
+    getNearestHospitals().then((res) => {
+      const hospitalsName = res.map(hospital => hospital.name);
+      const html = `
       <h3>Nearest hospital:</h3>
       <ul>
-      ${hospitalsName.map(name => {
-        return `<li>${name}</li>`;
-      }).join('\n')}
+      ${hospitalsName.map(name => `<li>${name}</li>`).join('\n')}
       </ul>
       `;
       // document.querySelector('#hospital_info > span').innerHTML = html;
       console.log(html);
-      getCurrentSelectionsModel().then(model => {
+      getCurrentSelectionsModel().then((model) => {
         model.getLayout();
         model.on('changed', (x) => {
-          model.getLayout().then(layout => {
+          model.getLayout().then((layout) => {
             // console.log(layout);
-          })
+          });
         });
       });
-      getField('NAME').then(field => {
+      getField('NAME').then((field) => {
         field.select(hospitalsName[0], false);
       });
-
     });
   });
 };
 function animateCircle(line) {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     let count = 0;
-    const intervalId = setInterval(function () {
+    const intervalId = setInterval(() => {
       count = (count + 1) % 200;
       if (count >= 199) {
         clearInterval(intervalId);
         resolve();
       }
-      var icons = line.get('icons');
-      icons[0].offset = (count / 2) + '%';
+      const icons = line.get('icons');
+      icons[0].offset = `${count / 2}%`;
       line.set('icons', icons);
     }, 20);
   });
 }
-
-
-
-
-
