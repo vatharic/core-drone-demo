@@ -1,7 +1,10 @@
 import * as mapStyles from './map-styles';
 import svg from '../assets/drone-svgrepo-com.svg';
+import { getCurrentSelectionsModel, getField } from '../enigma/models';
 
-import * as mqtt from './../mqtt'; // <- probably should be moved elsewhere
+import * as mqtt from '../mqtt'; // <- probably should be moved elsewhere
+
+let started = false;
 
 console.log(svg);
 
@@ -23,7 +26,7 @@ const map = new google.maps.Map(mapEl, {
 directionsDisplay.setMap(map);
 
 const ambulance = new google.maps.Marker({// 45.208779,-75.7684255
-  position: new self.google.maps.LatLng(45.208779, -75.7684255, 17),
+  position: new google.maps.LatLng(45.208779, -75.7684255, 17),
   // title:"Hello World!"
 });
 
@@ -65,6 +68,7 @@ function getNearestHospitals() {
 }
 
 const start = () => {
+  started = true;
   // // MQTT comm
   mqtt.init();
   mqtt.connect();
@@ -114,7 +118,8 @@ const start = () => {
   }
 
   animateCircle(line).then(() => {
-    // document.querySelector('#general_info > span').innerHTML = '<h3>Incident Found !!!</h3>\nat<br/> >> Lat: 32.9557\n<br/> >> Lng: -97.0664926';
+    // document.querySelector('#general_info > span').innerHTML =
+    // '<h3>Incident Found !!!</h3>\nat<br/> >> Lat: 32.9557\n<br/> >> Lng: -97.0664926';
     console.log('<h3>Incident Found !!!</h3>\nat<br/> >> Lat: 32.9557\n<br/> >> Lng: -97.0664926');
     getNearestHospitals().then((res) => {
       const hospitalsName = res.map(hospital => hospital.name);
@@ -130,7 +135,7 @@ const start = () => {
         model.getLayout();
         model.on('changed', (x) => {
           model.getLayout().then((layout) => {
-            // console.log(layout);
+            console.log(layout, x);
           });
         });
       });
@@ -144,4 +149,5 @@ const start = () => {
 export {
   getNearestHospitals,
   start,
+  started,
 };
