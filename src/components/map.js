@@ -17,17 +17,39 @@ const directionsDisplay = new google.maps.DirectionsRenderer();
 
 const map = new google.maps.Map(mapEl, {
   center: startLocation,
-  zoom: 15,
+  zoom: 14,
   mapTypeId: google.maps.MapTypeId.ROADMAP,
   disableDefaultUI: true,
   styles: mapStyles.default,
 });
 
-directionsDisplay.setMap(map);
+// directionsDisplay.setMap(map);
+
+const incident = new google.maps.Marker({ //45.2184704,-75.7655448
+  position: new google.maps.LatLng(45.2184704, -75.7655448),
+  icon: './assets/incident.svg',
+  map,
+});
+let blinking = false;
+setInterval(() => {
+  if (blinking) {
+    incident.setMap(null);
+  } else {
+    incident.setMap(map);
+  }
+  blinking = !blinking;
+}, 1000);
+
+const drone = new google.maps.Marker({ //45.2037622,-75.7510537
+  position: new google.maps.LatLng(45.2037622, -75.7510537),
+  icon: './assets/drone-svgrepo-com.svg',
+  map,
+});
 
 const ambulance = new google.maps.Marker({// 45.208779,-75.7684255
-  position: new google.maps.LatLng(45.208779, -75.7684255, 17),
-  // title:"Hello World!"
+  position: new google.maps.LatLng(45.208779, -75.7684255),
+  icon: './assets/ambulance-svgrepo-com.svg',
+  map,
 });
 
 // ambulance.setMap(map);
@@ -48,9 +70,9 @@ directionService.route(getDirRequest, (response, status) => {
     window.alert(`Directions request failed due to ${status}`);
   }
 }, {
-  sursuppressMarkers: true,
-  preserveViewport: true,
-});
+    sursuppressMarkers: true,
+    preserveViewport: true,
+  });
 
 function getNearestHospitals() {
   return new Promise((resolve) => {
