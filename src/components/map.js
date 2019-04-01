@@ -1,19 +1,18 @@
 import * as mapStyles from './map-styles';
-import svg from '../assets/drone-svgrepo-com.svg';
+import droneSymbolPath from '../assets/drone.svg';
+import ambulanceSymbolPath from '../assets/ambulance.svg';
 import { getCurrentSelectionsModel, getField } from '../enigma/models';
+import { routeAmbulance, droneRoute } from './map-routes';
 
 import * as mqtt from '../mqtt'; // <- probably should be moved elsewhere
 
-let started = false;
+// let started = false;
 
-console.log(svg);
+console.log(routeAmbulance);
 
 // 4041 Moodie Dr Richmond, ON K0A 2Z0 Canada -- 45.2184704,-75.7655448
 const mapEl = document.querySelector('#map');
 const startLocation = new google.maps.LatLng(45.2184704, -75.7655448, 17);
-
-const directionService = new google.maps.DirectionsService();
-const directionsDisplay = new google.maps.DirectionsRenderer();
 
 const map = new google.maps.Map(mapEl, {
   center: startLocation,
@@ -23,56 +22,92 @@ const map = new google.maps.Map(mapEl, {
   styles: mapStyles.default,
 });
 
-// directionsDisplay.setMap(map);
 
-const incident = new google.maps.Marker({ //45.2184704,-75.7655448
-  position: new google.maps.LatLng(45.2184704, -75.7655448),
-  icon: './assets/incident.svg',
-  map,
-});
-let blinking = false;
-setInterval(() => {
-  if (blinking) {
-    incident.setMap(null);
-  } else {
-    incident.setMap(map);
-  }
-  blinking = !blinking;
-}, 1000);
-
-const drone = new google.maps.Marker({ //45.2037622,-75.7510537
-  position: new google.maps.LatLng(45.2037622, -75.7510537),
-  icon: './assets/drone-svgrepo-com.svg',
-  map,
-});
-
-const ambulance = new google.maps.Marker({// 45.208779,-75.7684255
-  position: new google.maps.LatLng(45.208779, -75.7684255),
-  icon: './assets/ambulance-svgrepo-com.svg',
-  map,
-});
-
-// ambulance.setMap(map);
-
-console.log(ambulance);
-
-const travelMode = google.maps.DirectionsTravelMode.DRIVING;
-const getDirRequest = {
-  origin: { lat: 45.208779, lng: -75.7684255 },
-  destination: { lat: 45.2184666, lng: -75.7655501 }, // 45.2184666,-75.7655501
-  travelMode,
-};
-directionService.route(getDirRequest, (response, status) => {
-  if (status === 'OK') {
-    console.log('tadam', response);
-    directionsDisplay.setDirections(response);
-  } else {
-    window.alert(`Directions request failed due to ${status}`);
-  }
-}, {
-    sursuppressMarkers: true,
-    preserveViewport: true,
+function _initAmbulance() {
+  const lineSymbol = {
+    path: ambulanceSymbolPath,
+    scale: 0.05,
+    fillOpacity: 0,
+    strokeColor: 'white',
+    strokeWeight: 1,
+  };
+  return new google.maps.Polyline({
+    path: routeAmbulance,
+    icons: [{
+      icon: lineSymbol,
+      offset: '0%',
+    }],
+    strokeColor: 'rgba(255, 255, 0, 0.1)',
+    map,
   });
+}
+
+function _initDrone() {
+  const lineSymbol = {
+    path: droneSymbolPath,
+    scale: 0.05,
+    fillOpacity: 0,
+    strokeColor: '#8b0000',
+    strokeWeight: 1,
+  };
+  return new google.maps.Polyline({
+    path: droneRoute,
+    icons: [{
+      icon: lineSymbol,
+      offset: '0%',
+    }],
+    strokeColor: 'rgba(255, 255, 0, 0.1)',
+    map,
+  });
+}
+
+function _initIncident() {
+  const incident = new google.maps.Marker({ // 45.2184704,-75.7655448
+    position: new google.maps.LatLng(45.2184704, -75.7655448),
+    icon: './assets/incident.svg',
+    map,
+  });
+  let blinking = false;
+  setInterval(() => {
+    if (blinking) {
+      incident.setMap(null);
+    } else {
+      incident.setMap(map);
+    }
+    blinking = !blinking;
+  }, 1000);
+}
+
+function _animateVehicule(line) {
+  function animateCircle(l) {
+    return new Promise((resolve) => {
+      let count = 0;
+      const intervalId = setInterval(() => {
+        count = (count + 1) % 200;
+        if (count >= 199) {
+          clearInterval(intervalId);
+          resolve();
+        }
+        const icons = l.get('icons');
+        icons[0].offset = `${count / 2}%`;
+        l.set('icons', icons);
+      }, 20);
+    });
+  }
+
+  return animateCircle(line);
+}
+
+
+const startAnimation = () => {
+  const ambulance = _initAmbulance();
+  const drone = _initDrone();
+  _initIncident(); // maybe should be delayed
+  _animateVehicule(ambulance);
+  _animateVehicule(drone);
+};
+
+startAnimation();
 
 function getNearestHospitals() {
   return new Promise((resolve) => {
@@ -90,7 +125,7 @@ function getNearestHospitals() {
 }
 
 const start = () => {
-  started = true;
+  // started = true;
   // // MQTT comm
   mqtt.init();
   mqtt.connect();
@@ -106,17 +141,7 @@ const start = () => {
   };
 
   const line = new google.maps.Polyline({
-    path: [
-      { lat: 32.9546827, lng: -97.0666535 },
-      { lat: 32.9546827, lng: -97.0665141 },
-      { lat: 32.9548087, lng: -97.0664497 },
-      { lat: 32.9550788, lng: -97.0663317 },
-      { lat: 32.9553039, lng: -97.066321 },
-      { lat: 32.9554659, lng: -97.066321 },
-      { lat: 32.9555379, lng: -97.0664175 },
-      { lat: 32.955664, lng: -97.0664175 },
-      { lat: 32.9557, lng: -97.0664926 },
-    ],
+    path: routeAmbulance,
     icons: [{
       icon: lineSymbol,
       offset: '100%',
@@ -167,9 +192,8 @@ const start = () => {
     });
   });
 };
-
+// start();
 export {
   getNearestHospitals,
   start,
-  started,
 };

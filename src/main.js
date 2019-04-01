@@ -1,11 +1,9 @@
-import { start, started } from './components/map';
+import { start } from './components/map';
 
 function onPlayerReady() { }
 function onPlayerStateChange(event) {
-  if (!started) {
-    start();
-    event.target.playVideo();
-  }
+  // start();
+  // event.target.playVideo();
 }
 window.onYouTubeIframeAPIReady = () => new YT.Player('x-video', {
   playerVars: {
