@@ -1,5 +1,6 @@
-import './components/map/map';
+import { init, startAnimation } from './components/map/map';
 import './components/kpi/kpi';
+import './components/video/video';
 
 function onPlayerReady() { }
 function onPlayerStateChange() {
@@ -18,3 +19,16 @@ window.onYouTubeIframeAPIReady = () => new YT.Player('x-video', {
     onStateChange: onPlayerStateChange,
   },
 });
+
+init();
+
+// const videoElement = document.getElementById('live_feed');
+// videoElement.addEventListener('play', () => {
+//   startAnimation();
+// }, true);
+// console.log(videoElement);
+
+setTimeout(() => {
+  console.log('Incident FOUND !!!!');
+  startAnimation();
+}, 5000);

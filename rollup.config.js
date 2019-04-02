@@ -39,7 +39,7 @@ export default [{
     }),
     copy([
       { files: 'src/*.{html,css}', dest: 'dist' },
-      { files: 'src/assets/*.{png,svg}', dest: 'dist/assets' },
+      { files: 'src/assets/*.*', dest: 'dist/assets' },
     ], (process.env.NODE_ENV !== 'production' && { verbose: true, watch: true })),
     string({
       include: ['**/*.css', '**/*.json', '**/*.svg'],

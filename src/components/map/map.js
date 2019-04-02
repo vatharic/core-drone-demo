@@ -16,6 +16,10 @@ import * as mqtt from '../../mqtt'; // <- probably should be moved elsewhere
 const mapEl = document.querySelector('#map');
 const startLocation = new google.maps.LatLng(45.2184704, -75.7655448, 17);
 
+const ambulancesArr = [];
+const fireTrucksArr = [];
+let drone = null;
+
 const map = new google.maps.Map(mapEl, {
   center: new google.maps.LatLng(45.2424415, -75.7128212), // startLocation,
   zoom: 10,
@@ -61,83 +65,6 @@ function _initAmbulance(ambulance) {
     map,
   });
 }
-
-
-// function _initFiretruckSC90() {
-//   const lineSymbol = {
-//     path: firetruckSymbolPath,
-//     scale: 0.05,
-//     fillOpacity: 0,
-//     strokeColor: 'white',
-//     strokeWeight: 1,
-//   };
-//   return new google.maps.Polyline({
-//     path: firetruckSC90.default,
-//     icons: [{
-//       icon: lineSymbol,
-//       offset: '0%',
-//     }],
-//     strokeColor: 'rgba(255, 255, 0, 0.1)',
-//     map,
-//   });
-// }
-
-// function _initAmbulance4b01() {
-//   const lineSymbol = {
-//     path: ambulanceSymbolPath,
-//     scale: 0.05,
-//     fillOpacity: 0,
-//     strokeColor: 'white',
-//     strokeWeight: 1,
-//   };
-//   return new google.maps.Polyline({
-//     path: ambulance4b01.default,
-//     icons: [{
-//       icon: lineSymbol,
-//       offset: '0%',
-//     }],
-//     strokeColor: 'rgba(255, 255, 0, 0.1)',
-//     map,
-//   });
-// }
-
-// function _initAmbulance4b03() {
-//   const lineSymbol = {
-//     path: ambulanceSymbolPath,
-//     scale: 0.05,
-//     fillOpacity: 0,
-//     strokeColor: 'white',
-//     strokeWeight: 1,
-//   };
-//   return new google.maps.Polyline({
-//     path: ambulance4b03.default,
-//     icons: [{
-//       icon: lineSymbol,
-//       offset: '0%',
-//     }],
-//     strokeColor: 'rgba(255, 255, 0, 0.1)',
-//     map,
-//   });
-// }
-
-// function _initAmbulance4b04() {
-//   const lineSymbol = {
-//     path: ambulanceSymbolPath,
-//     scale: 0.05,
-//     fillOpacity: 0,
-//     strokeColor: 'white',
-//     strokeWeight: 1,
-//   };
-//   return new google.maps.Polyline({
-//     path: ambulance4b04.default,
-//     icons: [{
-//       icon: lineSymbol,
-//       offset: '0%',
-//     }],
-//     strokeColor: 'rgba(255, 255, 0, 0.1)',
-//     map,
-//   });
-// }
 
 function _initAmbulancee() {
   const lineSymbol = {
@@ -214,34 +141,31 @@ function _animateVehicule(line) {
   return animateCircle(line);
 }
 
+const init = () => {
+  _initIncident(); // should be delayed ??
 
-const startAnimation = () => {
-  const ambulance = _initAmbulancee();
-  const firetruck1 = _initFireTruck('firetruck1');
-  const firetruck2 = _initFireTruck('firetruck2');
-  const firetruck3 = _initFireTruck('firetruck3');
+  drone = _initDrone();
+  ambulancesArr.push(_initAmbulancee());
+  ambulancesArr.push(_initAmbulance('ambulance1'));
+  ambulancesArr.push(_initAmbulance('ambulance2'));
+  ambulancesArr.push(_initAmbulance('ambulance3'));
+  ambulancesArr.push(_initAmbulance('ambulance4'));
 
-  const ambulance1 = _initAmbulance('ambulance1');
-  const ambulance2 = _initAmbulance('ambulance2');
-  const ambulance3 = _initAmbulance('ambulance3');
-  const ambulance4 = _initAmbulance('ambulance4');
-
-  const drone = _initDrone();
-  _initIncident(); // maybe should be delayed
-
-  _animateVehicule(firetruck1);
-  _animateVehicule(firetruck2);
-  _animateVehicule(firetruck3);
-  _animateVehicule(ambulance);
-  _animateVehicule(ambulance1);
-  _animateVehicule(ambulance2);
-  _animateVehicule(ambulance3);
-  _animateVehicule(ambulance4);
-
-  _animateVehicule(drone);
+  fireTrucksArr.push(_initFireTruck('firetruck1'));
+  fireTrucksArr.push(_initFireTruck('firetruck2'));
+  fireTrucksArr.push(_initFireTruck('firetruck3'));
 };
 
-startAnimation();
+const startAnimation = () => {
+  _initIncident(); // maybe should be delayed
+  ambulancesArr.forEach((ambulance) => {
+    _animateVehicule(ambulance);
+  });
+  fireTrucksArr.forEach((fireTruck) => {
+    _animateVehicule(fireTruck);
+  });
+  _animateVehicule(drone);
+};
 
 function getNearestHospitals() {
   return new Promise((resolve) => {
@@ -331,4 +255,6 @@ const start = () => {
 export {
   getNearestHospitals,
   start,
+  startAnimation,
+  init,
 };
