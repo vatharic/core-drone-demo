@@ -25,9 +25,6 @@ body{
   width: 100vw;
   height: 100vh;
 }
-.grid-container > div{
-  background-color: #1D2C4D;
-}
 .video_container {
   grid-column-start: 1;
   grid-column-end: 3;
@@ -67,19 +64,14 @@ body{
   grid-row-start: 3;
   grid-row-end: 5;
 }
-div[class^="info"] > span{
-  display: block;
-  padding:20px;
-  text-align: center;
-  font-size: 15vh;
-  top: 50%;
-  margin-top: -37px;
-}
-div[class^="info"] h3, .rec_container h3{
-  text-align: center;
+#console{
+  background-color: #1D2C4D;
 }
 #console > pre {
   padding:20px;
+}
+#console > h3 {
+  text-align: center;
 }
 #hospital_info{
   overflow-x: auto;
