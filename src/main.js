@@ -1,4 +1,5 @@
 import { init, startAnimation } from './components/map/map';
+import './components/kpi/kpi';
 
 function onPlayerReady() { }
 function onPlayerStateChange() {
