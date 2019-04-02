@@ -7,7 +7,8 @@
     "WebSocket": true,
     "document": true,
     "google": true,
-    "YT": true
+    "YT": true,
+    "Mosquitto": true
   },
   "plugins": [
     "lit"

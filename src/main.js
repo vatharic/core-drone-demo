@@ -1,7 +1,7 @@
-import { start } from './components/map';
+import './components/map/map';
 
 function onPlayerReady() { }
-function onPlayerStateChange(event) {
+function onPlayerStateChange() {
   // start();
   // event.target.playVideo();
 }
