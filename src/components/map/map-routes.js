@@ -1,3 +1,29 @@
+import * as ambulance1 from '../vehicule-coords/4100';
+import * as ambulance2 from '../vehicule-coords/4320';
+import * as ambulance3 from '../vehicule-coords/4371';
+import * as ambulance4 from '../vehicule-coords/4910';
+import * as firetruck1 from '../vehicule-coords/sc80';
+import * as firetruck2 from '../vehicule-coords/sc90';
+import * as firetruck3 from '../vehicule-coords/t91';
+
+const ambulances = {
+  ambulance1,
+  ambulance2,
+  ambulance3,
+  ambulance4,
+};
+
+// import * as ambulance4b01 from './4b01';
+// import * as ambulance4b03 from './4b03';
+// import * as ambulance4b04 from './4b04';
+
+const firetrucks = {
+  firetruck1,
+  firetruck2,
+  firetruck3,
+};
+
+
 const routeAmbulance = [
   [-75.76779, 45.20896],
   [-75.76779, 45.20897],
@@ -20,6 +46,7 @@ const routeAmbulance = [
   lat: entry[1],
   lng: entry[0],
 }));
+
 const droneRoute = [
   [-75.75121, 45.20395],
   [-75.74909, 45.20481],
@@ -135,4 +162,6 @@ const droneRoute = [
 export {
   routeAmbulance,
   droneRoute,
+  ambulances,
+  firetrucks,
 };
