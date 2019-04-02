@@ -1,5 +1,6 @@
 import { init, startAnimation } from './components/map/map';
 import './components/kpi/kpi';
+import './components/video/video';
 
 function onPlayerReady() { }
 function onPlayerStateChange() {
@@ -21,8 +22,13 @@ window.onYouTubeIframeAPIReady = () => new YT.Player('x-video', {
 
 init();
 
-const videoElement = document.getElementById('live_feed');
-videoElement.addEventListener('play', () => {
+// const videoElement = document.getElementById('live_feed');
+// videoElement.addEventListener('play', () => {
+//   startAnimation();
+// }, true);
+// console.log(videoElement);
+
+setTimeout(() => {
+  console.log('Incident FOUND !!!!');
   startAnimation();
-}, true);
-console.log(videoElement);
+}, 5000);
