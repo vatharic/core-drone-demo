@@ -7,16 +7,8 @@ export default {
   },
   extend: {
     async getDoc() {
-      try {
-        const activeDoc = await this.getActiveDoc();
-        return activeDoc;
-      } catch (error) {
-        if (error.code) {
-          const doc = await this.openDoc(this.appID);
-          return doc;
-        }
-        throw error;
-      }
+      const doc = await this.openDoc(this.appID);
+      return doc;
     },
   },
 };

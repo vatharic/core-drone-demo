@@ -134,7 +134,7 @@ function _animateVehicule(line) {
         const icons = l.get('icons');
         icons[0].offset = `${count / 2}%`;
         l.set('icons', icons);
-      }, 60);
+      }, 20);
     });
   }
 
@@ -164,7 +164,7 @@ const startAnimation = () => {
   fireTrucksArr.forEach((fireTruck) => {
     _animateVehicule(fireTruck);
   });
-  _animateVehicule(drone);
+  return _animateVehicule(drone);
 };
 
 function getNearestHospitals() {

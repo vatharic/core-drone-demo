@@ -5,13 +5,12 @@ import getDoc from './get-doc';
 
 const ERR_ABORTED = 15;
 
-const appId = 'core-demo-2.qvf';
-const engineHost = 'localhost:9076/app';
+const appId = 'drone_app.qvf';
 const schemaEnigma = JSON.parse(schema);
 
 export default {
   schema: schemaEnigma,
-  url: `${window.location.protocol.replace('http', 'ws')}//${engineHost}/${appId}`,
+  url: new URLSearchParams(document.location.search).get('engine_url') || `ws://localhost:9076/app/${appId}`,
   createSocket: url => new WebSocket(url),
   mixins: [listCache, getDoc],
   responseInterceptors: [{
