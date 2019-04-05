@@ -21,31 +21,24 @@ class CDVideo extends LitElement {
           overflow: hidden;
         }
         video {
-          position:relative;
-          width:100%;
+          height: 100%;
           z-index:0;
           object-fit: fill;
         }
         .overlay {
-            position:absolute;
-            top:0;
-            left:0;
-            z-index:1;
-            width: 100%;
-            height:100%;
-            background:black;
-            background:rgba(0,0,0,0.6);
-
-            filter:blur(4px);
-            -o-filter:blur(4px);
-            -ms-filter:blur(4px);
-            -moz-filter:blur(4px);
-            -webkit-filter:blur(4px);
+          position:absolute;
+          top:0;
+          left:0;
+          z-index:1;
+          width: 100%;
+          height:100%;
+          background:black;
+          background:rgba(0,0,0,0.6);
+          filter:blur(4px);
         }
         p{
-          font-size: 78px;
-          margin-top: 13%;
-          padding-left: 10%;
+          font-size: 6vw;
+          text-align: center;
         }
       </style>
       <div class="container">

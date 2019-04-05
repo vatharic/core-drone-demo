@@ -38,6 +38,7 @@ export default [{
       ],
     }),
     copy([
+      { files: 'src/_redirects', dest: 'dist' },
       { files: 'src/*.{html,css}', dest: 'dist' },
       { files: 'src/assets/*.*', dest: 'dist/assets' },
     ], (process.env.NODE_ENV !== 'production' && { verbose: true, watch: true })),

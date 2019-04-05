@@ -50,7 +50,8 @@
   },
   "dependencies": {
     "enigma.js": "^2.4.0",
-    "lit-element": "^2.1.0"
+    "lit-element": "^2.1.0",
+    "lit-element-router": "^1.2.5"
   },
   "browserslist": [
     "last 2 versions"

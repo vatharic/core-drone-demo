@@ -1,79 +1,59 @@
-import { init, startAnimation } from './components/map/map';
-import './components/kpi/kpi';
-import './components/video/video';
-import { getHypercubeModel, getField } from './enigma/models';
+import { LitElement, html } from 'lit-element';
+import { routerMixin, routerOutletMixin } from 'lit-element-router';
 
+import './views/start-page';
+import './views/act1';
 
-const updateKPIs = (layout) => {
-  const hyperCube = layout.qHyperCube;
-  const headers = hyperCube.qDimensionInfo.map(dim => dim.qFallbackTitle);
-  const data = {};
-  headers.forEach((header, i) => {
-    data[header] = hyperCube.qDataPages[0].qMatrix[0][i].qText;
-  });
-  document.querySelector('.info1_container').innerHTML = data.Bodies;
-  document.querySelector('.info2_container').innerHTML = data.Responder;
-  document.querySelector('.info3_container').innerHTML = data.HazMats;
-  document.querySelector('.info4_container').innerHTML = data.Score;
+class AppRoute extends routerOutletMixin(LitElement) {}
 
-  document.querySelector('#console code').innerHTML = data.Recommendation;
-};
+customElements.define('app-route', AppRoute);
+class DroneDemoApp extends routerMixin(LitElement) {
+  constructor() {
+    super();
+    this.route = '';
+    this.params = {};
+  }
 
-async function startApp() {
-  const hyperCubeModel = await getHypercubeModel();
-  await hyperCubeModel.getLayout();
-  const field = await getField('Index');
-  const update = () => {
-    hyperCubeModel.getLayout().then((layout) => {
-      updateKPIs(layout);
-    });
-  };
-  hyperCubeModel.on('changed', update);
-  // update();
-  await field.clear();
-  let count = 0;
-  const intervalId = setInterval(() => {
-    count = (count + 1) % 60;
-    if (count >= 59) {
-      clearInterval(intervalId);
-    }
-    field.select(count.toString(), true);
-  }, 2000);
+  static get routes() {
+    return [{
+      name: 'start',
+      pattern: '',
+      guard: () => true,
+    }, {
+      name: 'act-1',
+      pattern: 'act-1',
+    }, {
+      name: 'act-2',
+      pattern: 'act-2',
+    }, {
+      name: 'not-found',
+      pattern: '*',
+    }];
+  }
+
+  onRoute(route, params/* , query, data */) {
+    // console.log(route, params, query, data);
+    this.route = route;
+    this.params = params;
+  }
+
+  createRenderRoot() {
+    /**
+     * Render template in light DOM. Note that shadow DOM features like
+     * encapsulated CSS are unavailable.
+     */
+    return this;
+  }
+
+  render() {
+    return html`
+      <app-route current-route=${this.route} class="grid-container">
+        <start-page route='start'>start page view</start-page>
+        <act-1 route='act-1'>act 1 view</act-1>
+        <act-2 route='act-2'>act 2 view</act-2>
+        <not-found route='not-found'>404 not found</not-found>
+      </app-route>
+    `;
+  }
 }
-
-
-function onPlayerReady() { }
-function onPlayerStateChange() {
-  // start();
-  // event.target.playVideo();
-}
-window.onYouTubeIframeAPIReady = () => new YT.Player('x-video', {
-  playerVars: {
-    autoplay: 0,
-    controls: 0,
-    rel: 0,
-    fs: 0,
-  },
-  events: {
-    onReady: onPlayerReady,
-    onStateChange: onPlayerStateChange,
-  },
-});
-
-init();
-// getCurrentSelectionsModel();
-
-// const videoElement = document.getElementById('live_feed');
-// videoElement.addEventListener('play', () => {
-//   startAnimation();
-// }, true);
-// console.log(videoElement);
-
-setTimeout(() => {
-  console.log('Incident FOUND !!!!');
-  startAnimation().then(() => {
-    console.log('Arrived at destination');
-    // apply selections
-    startApp();
-  });
-}, 5000);
+customElements.define('drone-demo-app', DroneDemoApp);
