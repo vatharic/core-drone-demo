@@ -1,6 +1,8 @@
 # core-drone-demo
 Web app drone demo
 
+[![CircleCI](https://circleci.com/gh/aihazm/core-drone-demo.svg?style=shield)](https://circleci.com/gh/aihazm/core-drone-demo)
+
 # Developing
 ### Install dependencies:
 ```
