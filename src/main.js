@@ -3,6 +3,7 @@ import { routerMixin, routerOutletMixin } from 'lit-element-router';
 
 import './views/start-page';
 import './views/act1';
+import './views/act2';
 
 class AppRoute extends routerOutletMixin(LitElement) {}
 
