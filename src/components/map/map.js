@@ -1,8 +1,5 @@
 import { LitElement, html } from 'lit-element';
 import * as mapStyles from './map-styles';
-import droneSymbolPath from '../../assets/drone.svg';
-import ambulanceSymbolPath from '../../assets/ambulance.svg';
-import firetruckSymbolPath from '../../assets/firetruck.svg';
 
 import {
   // routeAmbulance,
@@ -27,8 +24,9 @@ class CDMap extends LitElement {
       this.startLocation = new google.maps.LatLng(45.2184704, -75.7655448, 17);
       this.mapEl = this.shadowRoot.getElementById('map');
       this.map = new google.maps.Map(this.mapEl, {
-        center: new google.maps.LatLng(45.2424415, -75.7128212), // startLocation,
-        zoom: 10,
+        // new google.maps.LatLng(45.2424415, -75.7128212), // startLocation,
+        center: this.startLocation,
+        zoom: 12,
         mapTypeId: google.maps.MapTypeId.ROADMAP,
         disableDefaultUI: true,
         styles: mapStyles.default,
@@ -36,7 +34,7 @@ class CDMap extends LitElement {
       this._initIncident(); // should be delayed ??
 
       this.drone = this._initDrone();
-      // this.ambulancesArr.push(_initAmbulancee());
+
       this.ambulancesArr.push(this._initAmbulance('ambulance1'));
       this.ambulancesArr.push(this._initAmbulance('ambulance2'));
       this.ambulancesArr.push(this._initAmbulance('ambulance3'));
@@ -61,7 +59,7 @@ class CDMap extends LitElement {
           height: 100%;
         }
       </style>
-      <div id="map">sdsdss</div>
+      <div id="map"></div>
     `;
   }
 
@@ -78,13 +76,27 @@ class CDMap extends LitElement {
     return scriptTag;
   }
 
+  // the smooth zoom function
+  _smoothZoom(max, cnt) {
+    if (max > cnt) {
+      const z = google.maps.event.addListener(this.map, 'zoom_changed', () => {
+        google.maps.event.removeListener(z);
+        this._smoothZoom(max, cnt + 1);
+      });
+      setTimeout(() => { this.map.setZoom(cnt); }, 80);
+    }
+  }
+
   _initFireTruck(firetruck) {
     const lineSymbol = {
-      path: firetruckSymbolPath,
-      scale: 0.05,
-      fillOpacity: 0,
-      strokeColor: 'white',
-      strokeWeight: 1,
+      // path: firetruckSymbolPath,
+      path: google.maps.SymbolPath.CIRCLE,
+      scale: 10,
+      fillOpacity: 1,
+      fillColor: 'blue',
+      strokeColor: 'red',
+      strokeOpacity: 0.7,
+      strokeWeight: 6,
     };
     return new google.maps.Polyline({
       path: firetrucks[firetruck].default,
@@ -92,18 +104,21 @@ class CDMap extends LitElement {
         icon: lineSymbol,
         offset: '0%',
       }],
-      strokeColor: 'rgba(255, 255, 0, 0.1)',
+      strokeColor: 'rgba(255, 255, 0, 0)',
       map: this.map,
     });
   }
 
   _initAmbulance(ambulance) {
     const lineSymbol = {
-      path: ambulanceSymbolPath,
-      scale: 0.05,
-      fillOpacity: 0,
+      path: google.maps.SymbolPath.CIRCLE,
+      scale: 10,
+      // scale: 0.05,
+      fillOpacity: 1,
+      fillColor: 'red',
       strokeColor: 'white',
-      strokeWeight: 1,
+      strokeOpacity: 0.7,
+      strokeWeight: 6,
     };
     return new google.maps.Polyline({
       path: ambulances[ambulance].default,
@@ -111,26 +126,27 @@ class CDMap extends LitElement {
         icon: lineSymbol,
         offset: '0%',
       }],
-      strokeColor: 'rgba(255, 255, 0, 0.1)',
+      strokeColor: 'rgba(255, 255, 0, 0)',
       map: this.map,
     });
   }
 
   _initDrone() {
     const lineSymbol = {
-      path: droneSymbolPath,
-      scale: 0.05,
-      fillOpacity: 0,
-      strokeColor: '#8b0000',
-      strokeWeight: 1,
+      path: google.maps.SymbolPath.CIRCLE, // droneSymbolPath,
+      scale: 4,
+      fillOpacity: 1,
+      fillColor: 'black',
+      strokeColor: 'black',
+      strokeOpacity: 0.7,
+      strokeWeight: 10,
     };
     return new google.maps.Polyline({
       path: droneRoute,
       icons: [{
         icon: lineSymbol,
-        offset: '0%',
       }],
-      strokeColor: 'rgba(255, 255, 0, 0.1)',
+      strokeColor: 'rgba(255, 255, 0, 0)',
       map: this.map,
     });
   }
@@ -152,7 +168,7 @@ class CDMap extends LitElement {
     }, 1000);
   }
 
-  _animateVehicule(line) {
+  _animateVehicule(line, blink, ms = 1000) {
     function animateCircle(l) {
       return new Promise((resolve) => {
         let count = 0;
@@ -165,20 +181,67 @@ class CDMap extends LitElement {
           const icons = l.get('icons');
           icons[0].offset = `${count / 2}%`;
           l.set('icons', icons);
-        }, 20);
+        }, 60);
       });
     }
+    function blinking(l) {
+      setInterval(() => {
+        const icons = l.get('icons');
+        const fillColor = icons[0].icon.strokeColor;
+        const strokeColor = icons[0].icon.fillColor;
+        icons[0].icon.fillColor = fillColor;
+        icons[0].icon.strokeColor = strokeColor;
+        l.set('icons', icons);
+      }, ms);
+    }
+    if (blink) { blinking(line, ms); }
     return animateCircle(line);
+  }
+
+  _animateDrone(line) {
+    function animate(l) {
+      return new Promise((resolve) => {
+        let count = 0;
+        const intervalId = setInterval(() => {
+          count = (count + 1) % 200;
+          if (count >= 199) {
+            clearInterval(intervalId);
+            resolve();
+          }
+          const icons = l.get('icons');
+          icons[0].offset = `${count / 2}%`;
+          l.set('icons', icons);
+        }, 60);
+      });
+    }
+    function fade(l) {
+      const icons = l.get('icons');
+      let type = 'decrease';
+      setInterval(() => {
+        if (type === 'decrease') {
+          icons[0].icon.strokeOpacity = Math.round((icons[0].icon.strokeOpacity - 0.1) * 10) / 10;
+          type = icons[0].icon.strokeOpacity === 0 ? 'increase' : 'decrease';
+        } else {
+          icons[0].icon.strokeOpacity = Math.round((icons[0].icon.strokeOpacity + 0.1) * 10) / 10;
+          type = icons[0].icon.strokeOpacity === 1 ? 'decrease' : 'increase';
+        }
+        l.set('icons', icons);
+      }, 100);
+    }
+    fade(line);
+    return animate(line);
   }
 
   startAnimation() {
     this.ambulancesArr.forEach((ambulance) => {
-      this._animateVehicule(ambulance);
+      this._animateVehicule(ambulance, true);
     });
     this.fireTrucksArr.forEach((fireTruck) => {
-      this._animateVehicule(fireTruck);
+      this._animateVehicule(fireTruck, true, 500);
     });
-    return this._animateVehicule(this.drone);
+    return this._animateDrone(this.drone).then(() => {
+      this._smoothZoom(17, this.map.getZoom());
+    });
   }
 }
 
