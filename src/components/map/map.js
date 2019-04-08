@@ -241,6 +241,13 @@ class CDMap extends LitElement {
     });
     return this._animateDrone(this.drone).then(() => {
       this._smoothZoom(17, this.map.getZoom());
+      const videoEvent = new CustomEvent('playVideo', {
+        detail: {
+          type: 'video/webm',
+          src: './assets/Act_1-labelled.test9.webm',
+        },
+      });
+      window.dispatchEvent(videoEvent);
     });
   }
 }

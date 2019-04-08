@@ -36,6 +36,14 @@ class Act1Page extends routerMixin(LitElement) {
     `;
   }
 
+  createRenderRoot() {
+    /**
+     * Render template in light DOM. Note that shadow DOM features like
+     * encapsulated CSS are unavailable.
+     */
+    return this;
+  }
+
   updateKPIs(layout) {
     const hyperCube = layout.qHyperCube;
     const headers = hyperCube.qDimensionInfo.map(dim => dim.qFallbackTitle);
