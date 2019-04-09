@@ -1,5 +1,4 @@
 import { LitElement, html } from 'lit-element';
-import { routerMixin } from 'lit-element-router';
 import { getHypercubeModel, getField } from '../enigma/models';
 
 import '../components/map/map';
@@ -8,13 +7,20 @@ import '../components/video/video';
 
 import css from './act1.css';
 
-class Act1Page extends routerMixin(LitElement) {
-  constructor() {
-    super();
+class Act1Page extends LitElement {
+  firstUpdated() {
     setTimeout(() => {
       // apply selections
       this.startApp();
     }, 2000);
+  }
+
+  createRenderRoot() {
+    /**
+     * Render template in light DOM. Note that shadow DOM features like
+     * encapsulated CSS are unavailable.
+     */
+    return this;
   }
 
   render() {
@@ -36,14 +42,6 @@ class Act1Page extends routerMixin(LitElement) {
     `;
   }
 
-  createRenderRoot() {
-    /**
-     * Render template in light DOM. Note that shadow DOM features like
-     * encapsulated CSS are unavailable.
-     */
-    return this;
-  }
-
   updateKPIs(layout) {
     const hyperCube = layout.qHyperCube;
     const headers = hyperCube.qDimensionInfo.map(dim => dim.qFallbackTitle);
@@ -51,12 +49,12 @@ class Act1Page extends routerMixin(LitElement) {
     headers.forEach((header, i) => {
       data[header] = hyperCube.qDataPages[0].qMatrix[0][i].qText;
     });
-    this.shadowRoot.querySelector('.info1_container').innerHTML = data.Bodies;
-    this.shadowRoot.querySelector('.info2_container').innerHTML = data.Responder;
-    this.shadowRoot.querySelector('.info3_container').innerHTML = data.HazMats;
-    this.shadowRoot.querySelector('.info4_container').innerHTML = data.Score;
+    this.querySelector('.info1_container').innerHTML = data.Bodies;
+    this.querySelector('.info2_container').innerHTML = data.Responder;
+    this.querySelector('.info3_container').innerHTML = data.HazMats;
+    this.querySelector('.info4_container').innerHTML = data.Score;
 
-    this.shadowRoot.querySelector('#console code').innerHTML = data.Recommendation;
+    this.querySelector('#console code').innerHTML = data.Recommendation;
   }
 
   async startApp() {

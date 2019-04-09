@@ -1,13 +1,12 @@
 import { LitElement, html } from 'lit-element';
-import { routerMixin } from 'lit-element-router';
 
-class StartPage extends routerMixin(LitElement) {
+class StartPage extends LitElement {
   render() {
     return html`
       <style>
         .wrapper{
           height:100px;
-          width:330px;
+          width:335px;
           position:absolute;
           top:50%;
           margin-top: -50px;
