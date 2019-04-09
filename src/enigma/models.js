@@ -39,7 +39,15 @@ export async function getHypercubeModel() {
           qDef: {
             qGrouping: 'N',
             qFieldDefs: [
-              'Index',
+              'Elapsed Time',
+            ],
+          },
+        },
+        {
+          qDef: {
+            qGrouping: 'N',
+            qFieldDefs: [
+              'Adults',
             ],
           },
         },
@@ -55,39 +63,23 @@ export async function getHypercubeModel() {
           qDef: {
             qGrouping: 'N',
             qFieldDefs: [
+              'Children',
+            ],
+          },
+        },
+        {
+          qDef: {
+            qGrouping: 'N',
+            qFieldDefs: [
+              'Hazmats',
+            ],
+          },
+        },
+        {
+          qDef: {
+            qGrouping: 'N',
+            qFieldDefs: [
               'Injured',
-            ],
-          },
-        },
-        {
-          qDef: {
-            qGrouping: 'N',
-            qFieldDefs: [
-              'Ambulance',
-            ],
-          },
-        },
-        {
-          qDef: {
-            qGrouping: 'N',
-            qFieldDefs: [
-              'Fire',
-            ],
-          },
-        },
-        {
-          qDef: {
-            qGrouping: 'N',
-            qFieldDefs: [
-              'Responder',
-            ],
-          },
-        },
-        {
-          qDef: {
-            qGrouping: 'N',
-            qFieldDefs: [
-              'HazMats',
             ],
           },
         },
@@ -103,7 +95,15 @@ export async function getHypercubeModel() {
           qDef: {
             qGrouping: 'N',
             qFieldDefs: [
-              'Score',
+              'Risk Score',
+            ],
+          },
+        },
+        {
+          qDef: {
+            qGrouping: 'N',
+            qFieldDefs: [
+              'Vehicles',
             ],
           },
         },

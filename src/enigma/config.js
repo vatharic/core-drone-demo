@@ -5,7 +5,7 @@ import getDoc from './get-doc';
 
 const ERR_ABORTED = 15;
 
-const appId = 'drone_app.qvf';
+const appId = 'Drone App.qvf';
 const schemaEnigma = JSON.parse(schema);
 
 export default {

@@ -11,6 +11,14 @@ import {
 window.initMap = () => { window.dispatchEvent(new CustomEvent('map-ready')); };
 
 class CDMap extends LitElement {
+  static get properties() {
+    return {
+      zoom: { type: Number, reflect: true },
+      lat: { type: Number, reflect: true },
+      lng: { type: Number, reflect: true },
+    };
+  }
+
   constructor() {
     super();
     this.APIKey = 'AIzaSyBJLqNRZNyt3_TgqDiBErIfamrAOdr-mf4';
@@ -18,33 +26,21 @@ class CDMap extends LitElement {
     this.ambulancesArr = [];
     this.fireTrucksArr = [];
     this.drone = null;
+    this.zoom = 12;
+    this.lat = 45.2184704;
+    this.lng = -75.7655448;
 
     window.addEventListener('map-ready', () => {
       console.log('google maps ready');
-      this.startLocation = new google.maps.LatLng(45.2184704, -75.7655448, 17);
       this.mapEl = this.shadowRoot.getElementById('map');
       this.map = new google.maps.Map(this.mapEl, {
         // new google.maps.LatLng(45.2424415, -75.7128212), // startLocation,
-        center: this.startLocation,
-        zoom: 12,
+        center: new google.maps.LatLng(this.lat, this.lng),
+        zoom: this.zoom,
         mapTypeId: google.maps.MapTypeId.ROADMAP,
         disableDefaultUI: true,
         styles: mapStyles.default,
       });
-      this._initIncident(); // should be delayed ??
-
-      this.drone = this._initDrone();
-
-      this.ambulancesArr.push(this._initAmbulance('ambulance1'));
-      this.ambulancesArr.push(this._initAmbulance('ambulance2'));
-      this.ambulancesArr.push(this._initAmbulance('ambulance3'));
-      this.ambulancesArr.push(this._initAmbulance('ambulance4'));
-
-      this.fireTrucksArr.push(this._initFireTruck('firetruck1'));
-      this.fireTrucksArr.push(this._initFireTruck('firetruck2'));
-      this.fireTrucksArr.push(this._initFireTruck('firetruck3'));
-
-      this.startAnimation();
     });
   }
 
@@ -77,14 +73,18 @@ class CDMap extends LitElement {
   }
 
   // the smooth zoom function
-  _smoothZoom(max, cnt) {
+  _smoothZoom(max, cnt, timer = 80) {
     if (max > cnt) {
       const z = google.maps.event.addListener(this.map, 'zoom_changed', () => {
         google.maps.event.removeListener(z);
         this._smoothZoom(max, cnt + 1);
       });
-      setTimeout(() => { this.map.setZoom(cnt); }, 80);
+      setTimeout(() => { this.map.setZoom(cnt); }, timer);
     }
+  }
+
+  _panTo(lat, lng) {
+    this.map.panTo(new google.maps.LatLng(lat, lng));
   }
 
   _initFireTruck(firetruck) {
@@ -145,6 +145,7 @@ class CDMap extends LitElement {
       path: droneRoute,
       icons: [{
         icon: lineSymbol,
+        offset: '0%',
       }],
       strokeColor: 'rgba(255, 255, 0, 0)',
       map: this.map,
@@ -165,7 +166,7 @@ class CDMap extends LitElement {
         incident.setMap(this.map);
       }
       blinking = !blinking;
-    }, 1000);
+    }, 600);
   }
 
   _animateVehicule(line, blink, ms = 1000) {
@@ -211,7 +212,7 @@ class CDMap extends LitElement {
           const icons = l.get('icons');
           icons[0].offset = `${count / 2}%`;
           l.set('icons', icons);
-        }, 60);
+        }, 30);
       });
     }
     function fade(l) {
@@ -226,7 +227,7 @@ class CDMap extends LitElement {
           type = icons[0].icon.strokeOpacity === 1 ? 'decrease' : 'increase';
         }
         l.set('icons', icons);
-      }, 100);
+      }, 50);
     }
     fade(line);
     return animate(line);
