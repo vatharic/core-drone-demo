@@ -1,6 +1,10 @@
 import { LitElement, html } from 'lit-element';
 import { getHypercubeModel, getField } from '../enigma/models';
 
+import { init, topic } from '../mqtt/mqtt';
+
+import { mockData } from '../mqtt/mock-mqtt-msg';
+
 import '../components/map/map';
 import '../components/kpi/kpi';
 import '../components/video/video';
@@ -8,6 +12,11 @@ import '../components/video/video';
 import css from './act1.css';
 
 class Act1Page extends LitElement {
+  constructor() {
+    super();
+    this.mqttClient = null;
+  }
+
   firstUpdated() {
     const map = document.querySelector('.map_container');
     /**
@@ -92,22 +101,35 @@ class Act1Page extends LitElement {
     const hyperCubeModel = await getHypercubeModel();
     await hyperCubeModel.getLayout();
     const field = await getField('Elapsed Time');
+
     const update = () => {
       hyperCubeModel.getLayout().then((layout) => {
         this.updateKPIs(layout);
       });
     };
     hyperCubeModel.on('changed', update);
-    // update();
     await field.clear();
-    let count = 0;
-    const intervalId = setInterval(() => {
-      count = (count + 1) % 60;
-      if (count >= 59) {
-        clearInterval(intervalId);
-      }
-      field.lowLevelSelect([count], false);
-    }, 1000);
+
+    const msgCallBack = (msg) => {
+      const msgObject = JSON.parse(msg.payloadString);
+      field.lowLevelSelect([msgObject.index], false);
+    };
+    init(msgCallBack).then((client) => {
+      this.mqttClient = client;
+      this.mqttClient.subscribe(topic);
+
+      let count = 0;
+      const intervalId = setInterval(() => {
+        count = (count + 1) % mockData.length;
+        if (count >= mockData.length - 1) {
+          clearInterval(intervalId);
+        }
+        mockData[count].index = count;
+        const message = new Paho.MQTT.Message(JSON.stringify(mockData[count]));
+        message.destinationName = topic;
+        this.mqttClient.send(message);
+      }, 1000);
+    });
   }
 }
 customElements.define('act-1', Act1Page);

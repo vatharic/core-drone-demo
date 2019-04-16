@@ -8,13 +8,10 @@ class CDKpi extends LitElement {
           background-color: #1D2C4D;
         }
         h3 {
+          margin: 10px;
           text-align: center;
           display: block;
-          font-size: 1.17em;
-          margin-block-start: 1em;
-          margin-block-end: 1em;
-          margin-inline-start: 0px;
-          margin-inline-end: 0px;
+          font-size: 1.5vw;
           font-weight: bold;
         }
         span{

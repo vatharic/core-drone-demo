@@ -17,12 +17,12 @@ export default [{
     sourcemap: (process.env.NODE_ENV === 'production') ? false : 'inline',
   },
   plugins: [
+    commonjs(),
     nodeResolve({
       jsnext: true,
       main: true,
       browser: true,
     }),
-    commonjs(),
     babel({
       plugins: ['transform-custom-element-classes'],
       exclude: 'node_modules/core-js/**',
