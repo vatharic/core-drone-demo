@@ -128,6 +128,113 @@ export async function getHypercubeModel() {
   return doc.getOrCreateObject(defTpl, '$');
 }
 
+export async function getHypercubeModelAct2() {
+  const defTpl = {
+    qInfo: {
+      qId: `data_model_${new Date()}`,
+      qType: 'table',
+    },
+    qHyperCubeDef: {
+      qDimensions: [
+        {
+          qDef: {
+            qGrouping: 'N',
+            qFieldDefs: ['A2 Elapsed Time'],
+          },
+        },
+        {
+          qDef: {
+            qGrouping: 'N',
+            qFieldDefs: ['A2 A_Responder'],
+          },
+        },
+        {
+          qDef: {
+            qGrouping: 'N',
+            qFieldDefs: ['A2 Adults'],
+          },
+        },
+        {
+          qDef: {
+            qGrouping: 'N',
+            qFieldDefs: ['A2 Ambulance'],
+          },
+        },
+        {
+          qDef: {
+            qGrouping: 'N',
+            qFieldDefs: ['A2 Bodies'],
+          },
+        },
+        {
+          qDef: {
+            qGrouping: 'N',
+            qFieldDefs: ['A2 Children'],
+          },
+        },
+        {
+          qDef: {
+            qGrouping: 'N',
+            qFieldDefs: ['A2 F_Responder'],
+          },
+        },
+        {
+          qDef: {
+            qGrouping: 'N',
+            qFieldDefs: ['A2 Fire Truck'],
+          },
+        },
+        {
+          qDef: {
+            qGrouping: 'N',
+            qFieldDefs: ['A2 Hazmats'],
+          },
+        },
+        {
+          qDef: {
+            qGrouping: 'N',
+            qFieldDefs: ['A2 Injured'],
+          },
+        },
+        {
+          qDef: {
+            qGrouping: 'N',
+            qFieldDefs: ['A2 Injured_Enroute'],
+          },
+        },
+        {
+          qDef: {
+            qGrouping: 'N',
+            qFieldDefs: ['A2 Injured_Loaded'],
+          },
+        },
+        {
+          qDef: {
+            qGrouping: 'N',
+            qFieldDefs: ['A2 Injured'],
+          },
+        },
+      ],
+      qMeasures: [],
+      qSuppressZero: false,
+      qSuppressMissing: true,
+      qAlwaysFullyExpanded: false,
+      qInitialDataFetch: [
+        {
+          qLeft: 0,
+          qTop: 0,
+          qWidth: 14,
+          qHeight: 100,
+        },
+      ],
+      qMode: 'S',
+    },
+  };
+
+  await init();
+  return doc.getOrCreateObject(defTpl, '$');
+}
+
 /**
  * Creates a session object representing a listobject
  * @param {String} filedName - the field name to be represented as a list

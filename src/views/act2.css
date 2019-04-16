@@ -53,9 +53,12 @@
 }
 #console > pre {
   padding:20px;
+  font-size: 2.5vh;
 }
 #console > h3 {
   text-align: center;
+  font-size: 1vw;
+  margin:10px;
 }
 #hospital_info{
   overflow-x: auto;

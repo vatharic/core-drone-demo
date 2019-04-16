@@ -81,6 +81,13 @@ class CDMap extends LitElement {
       });
       setTimeout(() => { this.map.setZoom(cnt); }, timer);
     }
+    if (max < cnt) {
+      const z = google.maps.event.addListener(this.map, 'zoom_changed', () => {
+        google.maps.event.removeListener(z);
+        this._smoothZoom(max, cnt - 1);
+      });
+      setTimeout(() => { this.map.setZoom(cnt); }, timer);
+    }
   }
 
   _panTo(lat, lng) {
@@ -150,6 +157,35 @@ class CDMap extends LitElement {
       strokeColor: 'rgba(255, 255, 0, 0)',
       map: this.map,
     });
+  }
+
+  _initDroneAct2() {
+    const droneMarker = new google.maps.Marker({ // last position from act 1
+      position: new google.maps.LatLng(45.2184704, -75.7655448),
+      icon: {
+        path: google.maps.SymbolPath.CIRCLE, // droneSymbolPath,
+        scale: 4,
+        fillOpacity: 1,
+        fillColor: 'black',
+        strokeColor: 'black',
+        strokeOpacity: 0.7,
+        strokeWeight: 10,
+      },
+      map: this.map,
+    });
+    const icon = droneMarker.get('icon');
+    let type = 'decrease';
+    setInterval(() => {
+      if (type === 'decrease') {
+        icon.strokeOpacity = Math.round((icon.strokeOpacity - 0.1) * 10) / 10;
+        type = icon.strokeOpacity === 0 ? 'increase' : 'decrease';
+      } else {
+        icon.strokeOpacity = Math.round((icon.strokeOpacity + 0.1) * 10) / 10;
+        type = icon.strokeOpacity === 1 ? 'decrease' : 'increase';
+      }
+      droneMarker.set('icon', icon);
+    }, 50);
+    return droneMarker;
   }
 
   _initIncident() {
@@ -231,6 +267,21 @@ class CDMap extends LitElement {
     }
     fade(line);
     return animate(line);
+  }
+
+  getNearestHospitals() {
+    return new Promise((resolve) => {
+      const placeService = new google.maps.places.PlacesService(this.map);
+      const request = {
+        location: new google.maps.LatLng(45.2184704, -75.7655448), // last position of the drone
+        keyword: 'hospital',
+        rankBy: google.maps.places.RankBy.DISTANCE,
+        type: ['hospital'/* , 'police', 'fire_station' */], // supported types can be found here -> https://developers.google.com/places/supported_types
+      };
+      placeService.nearbySearch(request, (res) => {
+        resolve(res);
+      });
+    });
   }
 
   startAnimation() {

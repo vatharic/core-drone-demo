@@ -3,8 +3,8 @@ import { LitElement, html } from 'lit-element';
 class CDVideo extends LitElement {
   constructor() {
     super();
-    this.src = './assets/sample.webm';
-    this.type = 'video/webm';
+    this.src = '';
+    this.type = '';
     window.addEventListener('playVideo', ($event) => {
       if ($event && $event.detail) {
         const videoEl = this.shadowRoot.querySelector('#live_feed');

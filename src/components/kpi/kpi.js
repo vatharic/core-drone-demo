@@ -1,6 +1,17 @@
 import { LitElement, html } from 'lit-element';
 
 class CDKpi extends LitElement {
+  static get properties() {
+    return {
+      fontsize: { type: String, reflect: true },
+    };
+  }
+
+  constructor() {
+    super();
+    this.fontsize = '15vh';
+  }
+
   render() {
     return html`
       <style>
@@ -18,7 +29,7 @@ class CDKpi extends LitElement {
           display: block;
           padding:20px;
           text-align: center;
-          font-size: 15vh;
+          font-size: ${this.fontsize};
           top: 50%;
           margin-top: -37px;
         }

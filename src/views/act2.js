@@ -1,5 +1,5 @@
 import { LitElement, html } from 'lit-element';
-import { getHypercubeModel, getField } from '../enigma/models';
+import { getHypercubeModelAct2, getField } from '../enigma/models';
 
 import '../components/map/map';
 import '../components/kpi/kpi';
@@ -9,6 +9,54 @@ import css from './act2.css';
 
 class Act2Page extends LitElement {
   firstUpdated() {
+    const map = document.querySelector('.map_container');
+    const videoEvent = new CustomEvent('playVideo', {
+      detail: {
+        type: 'video/webm',
+        src: './assets/Act_2_cropped.webm',
+      },
+    });
+    setTimeout(async () => {
+      map._initIncident.bind(map);
+      window.dispatchEvent(videoEvent);
+
+      const hyperCubeModel = await getHypercubeModelAct2();
+      await hyperCubeModel.getLayout();
+      const field = await getField('A2 Elapsed Time');
+
+      const update = () => {
+        hyperCubeModel.getLayout().then((layout) => {
+          this.updateKPIs(layout);
+        });
+      };
+      hyperCubeModel.on('changed', update);
+      await field.clear();
+
+      let count = 0;
+      // 3:57 => 60 * 3 + 57 sec == 237sec
+      const intervalId = setInterval(() => {
+        count = (count + 1) % 237;
+        if (count >= 237 - 1) {
+          clearInterval(intervalId);
+        }
+        field.lowLevelSelect([count], false);
+      }, 1000);
+    }, 1000);
+    setTimeout(map._initDroneAct2.bind(map), 1000);
+    setTimeout(() => map._smoothZoom(10, 13, 60), 2000);
+    setTimeout(() => map._animateVehicule(map._initAmbulance('ambulance1'), true), 5000);
+    setTimeout(() => map._animateVehicule(map._initAmbulance('ambulance2'), true), 5000);
+    setTimeout(() => map._animateVehicule(map._initAmbulance('ambulance3'), true), 5000);
+    setTimeout(() => map._animateVehicule(map._initFireTruck('firetruck1'), true, 500), 5000);
+    setTimeout(() => map._animateVehicule(map._initFireTruck('firetruck2'), true, 500), 5000);
+
+    setTimeout(() => {
+      map.getNearestHospitals().then((hospitals) => {
+        const hospHtml = hospitals.slice(0, 5).map(h => `<span>${h.name}</span><br/>`);
+        this.querySelector('#console code').innerHTML = `<h4>Closest Hospitals:</h4>${hospHtml}`;
+        // console.log(hospitals.map(h => h.name));
+      });
+    }, 12000);
   }
 
   createRenderRoot() {
@@ -25,9 +73,9 @@ class Act2Page extends LitElement {
       <div class="grid-container">
         <cd-video class="video_container"></cd-video>
         <cd-kpi id="general_info" class="info1_container" title="Injured on scene">0</cd-kpi>
-        <cd-kpi id="hospital_info" class="info2_container" title="Responders on scene">0</cd-kpi>
+        <cd-kpi id="hospital_info" class="info2_container" title="Responders on scene"></cd-kpi>
         <cd-kpi class="info3_container" title="Injured en route to hospital">0</cd-kpi>
-        <cd-kpi class="info4_container" title="type of injuries / ETA to hospitals">0</cd-kpi>
+        <cd-kpi class="info4_container" title="Injured Loaded">0</cd-kpi>
         <!-- <div id="map" class="map_container"></div> -->
         <cd-map class="map_container"></cd-map>
         <div id="console" class="rec_container">
@@ -45,34 +93,11 @@ class Act2Page extends LitElement {
     headers.forEach((header, i) => {
       data[header] = hyperCube.qDataPages[0].qMatrix[0][i].qText;
     });
-    this.querySelector('.info1_container').innerHTML = data.Bodies;
-    this.querySelector('.info2_container').innerHTML = data.Responder;
-    this.querySelector('.info3_container').innerHTML = data.HazMats;
-    this.querySelector('.info4_container').innerHTML = data.Score;
-
-    this.querySelector('#console code').innerHTML = data.Recommendation;
-  }
-
-  async startApp() {
-    const hyperCubeModel = await getHypercubeModel();
-    await hyperCubeModel.getLayout();
-    const field = await getField('Index');
-    const update = () => {
-      hyperCubeModel.getLayout().then((layout) => {
-        this.updateKPIs(layout);
-      });
-    };
-    hyperCubeModel.on('changed', update);
-    // update();
-    await field.clear();
-    let count = 0;
-    const intervalId = setInterval(() => {
-      count = (count + 1) % 60;
-      if (count >= 59) {
-        clearInterval(intervalId);
-      }
-      field.select(count.toString(), true);
-    }, 1000);
+    this.querySelector('.info1_container').innerHTML = data['A2 Injured'];
+    this.querySelector('.info2_container').fontsize = '3vh';
+    this.querySelector('.info2_container').innerHTML = `<div style="margin-top: 6%; text-align: left;">Paramedics: ${data['A2 A_Responder']}</br>Firemen: ${data['A2 F_Responder']}</div>`;
+    this.querySelector('.info3_container').innerHTML = data['A2 Injured_Enroute'];
+    this.querySelector('.info4_container').innerHTML = data['A2 Injured_Loaded'];
   }
 }
 customElements.define('act-2', Act2Page);
