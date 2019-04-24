@@ -12,7 +12,7 @@ const schemaEnigma = JSON.parse(schema);
 
 export default {
   schema: schemaEnigma,
-  url: new URLSearchParams(document.location.search).get('engine_url') || ((process.env.NODE_ENV === 'production') ? `wss://${process.env.BACKEND}/sense/app/${appId_1}` : `ws://localhost:9076/app/${appId_1}`),
+  url: new URLSearchParams(document.location.search).get('engine_url') || ((process.env.NODE_ENV === 'production') ? `wss://${process.env.BACKEND}/app/${appId_1}` : `ws://localhost:9076/app/${appId_1}`),
   createSocket: url => new WebSocket(url),
   mixins: [listCache, getDoc],
   responseInterceptors: [{
