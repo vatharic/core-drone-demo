@@ -5,6 +5,7 @@ import copy from 'rollup-plugin-copy-glob';
 import serve from 'rollup-plugin-serve';
 import livereload from 'rollup-plugin-livereload';
 import commonjs from 'rollup-plugin-commonjs';
+import replace from 'rollup-plugin-replace';
 
 import pkg from './package.json';
 
@@ -44,6 +45,12 @@ export default [{
     ], (process.env.NODE_ENV !== 'production' && { verbose: true, watch: true })),
     string({
       include: ['**/*.css', '**/*.json', '**/*.svg'],
+    }),
+    replace({
+      'process.env.NODE_ENV': `'${process.env.NODE_ENV}'`,
+      'process.env.BACKEND': `'${process.env.BACKEND}'`,
+      'process.env.APP_1': `'${process.env.APP_1}'`,
+      'process.env.APP_2': `'${process.env.APP_2}'`,
     }),
     (process.env.NODE_ENV !== 'production' && serve({ contentBase: ['dist'], open: true, historyApiFallback: true })),
     (process.env.NODE_ENV !== 'production' && livereload({ watch: 'dist' })),
