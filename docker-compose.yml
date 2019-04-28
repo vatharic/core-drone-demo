@@ -1,4 +1,4 @@
-version: "3.3"
+version: "3.0"
 services:
   engine:
     image: qlikcore/engine:12.368.0
