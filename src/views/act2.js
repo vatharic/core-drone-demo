@@ -42,20 +42,22 @@ class Act2Page extends LitElement {
         field.lowLevelSelect([count], false);
       }, 1000);
     }, 1000);
-    setTimeout(map._initDroneAct2.bind(map), 1000);
-    setTimeout(() => map._smoothZoom(10, 13, 60), 2000);
-    setTimeout(() => map._animateVehicule(map._initAmbulance('ambulance1'), true), 5000);
-    setTimeout(() => map._animateVehicule(map._initAmbulance('ambulance2'), true), 5000);
-    setTimeout(() => map._animateVehicule(map._initAmbulance('ambulance3'), true), 5000);
-    setTimeout(() => map._animateVehicule(map._initFireTruck('firetruck1'), true, 500), 5000);
-    setTimeout(() => map._animateVehicule(map._initFireTruck('firetruck2'), true, 500), 5000);
 
+    // ft1 30s
+    // amb1 1:04m
+    // amb2 2:20m
+
+    setTimeout(() => map._initAndAnimateDroneAct2(), 1000);
+    setTimeout(() => map._smoothZoom(2), 2000);
+    setTimeout(() => map._initAndAnimateAmbulance('ambulance1'), 5000);
+    setTimeout(() => map._initAndAnimateAmbulance('ambulance2'), 5000);
+    setTimeout(() => map._initAndAnimateAmbulance('ambulance3'), 5000);
+    setTimeout(() => map._initAndAnimateFiretruck('firetruck1'), 5000);
+    setTimeout(() => map._initAndAnimateFiretruck('firetruck2'), 5000);
     setTimeout(() => {
-      map.getNearestHospitals().then((hospitals) => {
-        const hospHtml = hospitals.slice(0, 5).map(h => `<span>${h.name}</span><br/>`);
-        this.querySelector('#console code').innerHTML = `<h4>Closest Hospitals:</h4>${hospHtml}`;
-        // console.log(hospitals.map(h => h.name));
-      });
+      const hospitals = map.getNearestHospitals();
+      const hospHtml = hospitals.map(h => `<span>${h.name}</span><br/>`);
+      this.querySelector('#console code').innerHTML = `<h4>Closest Hospitals:</h4>${hospHtml.join('')}`;
     }, 12000);
   }
 

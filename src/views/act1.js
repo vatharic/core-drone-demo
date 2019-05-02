@@ -31,12 +31,11 @@ class Act1Page extends LitElement {
       map._panTo(45.2184704, -75.7655448);
     }, 3500);
     setTimeout(() => {
-      map._smoothZoom(14, 10, 60);
+      map._smoothZoom(0.15);
     }, 5000);
     setTimeout(() => {
-      const drone = map._initDrone.apply(map);
-      map._animateDrone(drone).then(() => {
-        map._smoothZoom(17, 14, 60);
+      map._initAndAnimateDroneAct1().then(() => {
+        map._smoothZoom(0.15);
         const videoEvent = new CustomEvent('playVideo', {
           detail: {
             type: 'video/webm',
