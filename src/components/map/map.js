@@ -9,7 +9,6 @@ import {
 } from './map-routes';
 
 window.onIdevioWebMapLoaded = () => { window.dispatchEvent(new CustomEvent('map-ready')); };
-const WEBMAP_KEY = 'placeholder';
 
 class CDMap extends LitElement {
   static get properties() {
@@ -22,7 +21,7 @@ class CDMap extends LitElement {
 
   constructor() {
     super();
-    this.qAPIKey = WEBMAP_KEY;
+    this.qAPIKey = process.env.API_KEY;
 
     this.zoom = 12;
     this.lat = 45.2184704;
