@@ -35,13 +35,12 @@ class Act1Page extends LitElement {
     }, 5000);
     setTimeout(() => {
       const drone = map._initDrone.apply(map);
-      const videoUrlStream = (new URL(document.location.href)).searchParams.get('video_url');
       map._animateDrone(drone).then(() => {
         map._smoothZoom(17, 14, 60);
         const videoEvent = new CustomEvent('playVideo', {
           detail: {
             type: 'video/webm',
-            src: videoUrlStream || './assets/Act_1-labelled.test9.webm',
+            src: './assets/Act_1-labelled.test9.webm',
           },
         });
         window.dispatchEvent(videoEvent);

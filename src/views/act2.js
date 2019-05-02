@@ -10,11 +10,10 @@ import css from './act2.css';
 class Act2Page extends LitElement {
   firstUpdated() {
     const map = document.querySelector('.map_container');
-    const videoUrlStream = (new URL(document.location.href)).searchParams.get('video_url');
     const videoEvent = new CustomEvent('playVideo', {
       detail: {
         type: 'video/webm',
-        src: videoUrlStream || './assets/Act_2_cropped.webm',
+        src: './assets/Act_2_cropped.webm',
       },
     });
     setTimeout(async () => {

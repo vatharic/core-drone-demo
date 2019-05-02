@@ -1,4 +1,5 @@
 import { LitElement, html } from 'lit-element';
+// import Hls from 'hls.js';
 
 class CDVideo extends LitElement {
   constructor() {
@@ -8,10 +9,20 @@ class CDVideo extends LitElement {
     window.addEventListener('playVideo', ($event) => {
       if ($event && $event.detail) {
         const videoEl = this.shadowRoot.querySelector('#live_feed');
-        videoEl.src = $event.detail.src;
-        videoEl.type = $event.detail.type;
-        videoEl.load();
-        videoEl.play();
+        const videoUrlStream = (new URL(document.location.href)).searchParams.get('video_url');
+        if (Hls.isSupported() && videoUrlStream) {
+          const hls = new Hls();
+          hls.loadSource(videoUrlStream);
+          hls.attachMedia(videoEl);
+          hls.on(Hls.Events.MANIFEST_PARSED, () => {
+            videoEl.play();
+          });
+        } else {
+          videoEl.src = $event.detail.src;
+          videoEl.type = $event.detail.type;
+          videoEl.load();
+          videoEl.play();
+        }
         const overlay = this.shadowRoot.querySelector('.overlay');
         overlay.classList.add('off');
       }
@@ -39,9 +50,10 @@ class CDVideo extends LitElement {
           overflow: hidden;
         }
         video {
-          width: 100%;
+          height: 100%;
           z-index:0;
           object-fit: fill;
+          text-align: center;
         }
         .overlay {
           position:absolute;

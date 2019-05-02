@@ -9,7 +9,8 @@
     "google": true,
     "Paho": true,
     "YT": true,
-    "Mosquitto": true
+    "Mosquitto": true,
+    "Hls": true
   },
   "plugins": [
     "lit"
