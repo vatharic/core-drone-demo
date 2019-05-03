@@ -57,7 +57,8 @@ class Act2Page extends LitElement {
     setTimeout(() => {
       map._getRoutes().then((result) => {
         const hospHtml = result.routes.map((r) => {
-          const distanceInMiles = Math.round((r.distanceFromOrigin + r.distanceToDestination + r.length) / 1609.34);
+          const distance = r.distanceFromOrigin + r.distanceToDestination + r.length;
+          const distanceInMiles = Math.round(distance / 1609.34);
           return `<span>${r.routeId}<br/>Distance: ${distanceInMiles} miles - ETA: ${this._formatTime(r.duration)}</span><br/>`;
         });
         this.querySelector('#console code').innerHTML = `<h4>Closest Hospitals:</h4>${hospHtml.join('')}`;
