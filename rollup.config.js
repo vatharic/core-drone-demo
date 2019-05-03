@@ -48,6 +48,7 @@ export default [{
     }),
     replace({
       'process.env.API_KEY': `'${process.env.API_KEY}'`,
+      'process.env.ROUTE_KEY': `'${process.env.ROUTE_KEY}'`,
     }),
     (process.env.NODE_ENV !== 'production' && serve({ contentBase: ['dist'], open: true, historyApiFallback: true })),
     (process.env.NODE_ENV !== 'production' && livereload({ watch: 'dist' })),

@@ -55,10 +55,26 @@ class Act2Page extends LitElement {
     setTimeout(() => map._initAndAnimateFiretruck('firetruck1'), 5000);
     setTimeout(() => map._initAndAnimateFiretruck('firetruck2'), 5000);
     setTimeout(() => {
-      const hospitals = map.getNearestHospitals();
-      const hospHtml = hospitals.map(h => `<span>${h.name}</span><br/>`);
-      this.querySelector('#console code').innerHTML = `<h4>Closest Hospitals:</h4>${hospHtml.join('')}`;
+      map._getRoutes().then((result) => {
+        const hospHtml = result.routes.map((r) => {
+          const distanceInMiles = Math.round((r.distanceFromOrigin + r.distanceToDestination + r.length) / 1609.34);
+          return `<span>${r.routeId}<br/>Distance: ${distanceInMiles} miles - ETA: ${this._formatTime(r.duration)}</span><br/>`;
+        });
+        this.querySelector('#console code').innerHTML = `<h4>Closest Hospitals:</h4>${hospHtml.join('')}`;
+      });
     }, 12000);
+  }
+
+  _formatTime(string) {
+    const secNum = parseInt(string, 10); // don't forget the second param
+    let hours = Math.floor(secNum / 3600);
+    let minutes = Math.floor((secNum - (hours * 3600)) / 60);
+    let seconds = secNum - (hours * 3600) - (minutes * 60);
+
+    if (hours < 10) { hours = `0${hours}`; }
+    if (minutes < 10) { minutes = `0${minutes}`; }
+    if (seconds < 10) { seconds = `0${seconds}`; }
+    return `${hours}:${minutes}:${seconds}`;
   }
 
   createRenderRoot() {

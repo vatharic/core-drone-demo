@@ -22,7 +22,7 @@ class CDMap extends LitElement {
   constructor() {
     super();
     this.qAPIKey = process.env.API_KEY;
-
+    this.qROUTEkey = process.env.ROUTE_KEY;
     this.zoom = 12;
     this.lat = 45.2184704;
     this.lng = -75.7655448;
@@ -285,6 +285,52 @@ class CDMap extends LitElement {
       { name: 'The Ottawa Hospital Civic Campus', lat: 45.392345, lng: -75.720532 },
       { name: 'The Ottawa Hospital General Campus', lat: 45.4033, lng: -75.648996 },
     ];
+  }
+
+  _getRoutes() {
+    return new Promise((resolve) => {
+      const startPoint = `${droneRoute[droneRoute.length - 1].lat}, ${droneRoute[droneRoute.length - 1].lng}`;
+      const hospitals = this.getNearestHospitals();
+      const endPoints = [];
+      for (let i = 0; i < hospitals.length; i += 1) {
+        endPoints.push({
+          name: hospitals[i].name,
+          endPoint: `${hospitals[i].lat}, ${hospitals[i].lng}`,
+        });
+      }
+      const query = this._createRoutesQuery(startPoint, endPoints);
+
+      const url = `https://ga.qlikcloud.com/ravegeo/route2/routes?key=${this.qROUTEkey}&format=json`;
+      const xmlHttp = new XMLHttpRequest();
+
+      xmlHttp.onreadystatechange = function onreadystatechange() {
+        if (xmlHttp.readyState === 4 && xmlHttp.status === 200) {
+          resolve(JSON.parse(xmlHttp.responseText));
+        }
+      };
+
+      xmlHttp.onerror = () => {
+        resolve(hospitals.map(h => ({
+          distanceFromOrigin: 0,
+          distanceToDestination: 0,
+          length: 0,
+          routeId: h.name,
+        })));
+      };
+      xmlHttp.open('POST', url, true); // true for asynchronous
+      xmlHttp.send(query);
+    });
+  }
+
+  _createRoutesQuery(startPoint, endPoints) {
+    const routes = [];
+    for (let i = 0; i < endPoints.length; i += 1) {
+      routes.push(`<RouteRequest routeId="${endPoints[i].name}" origin="${startPoint}" destination="${endPoints[i].endPoint}" />`);
+    }
+    const postRequest = `<RoutesRequest key="${this.qROUTEkey}" criteria="fastest" requestId="req1" scheme="default" transportation="car"> ${routes.join('')} </RoutesRequest>`;
+
+    const query = postRequest;
+    return query;
   }
 }
 
