@@ -93,7 +93,7 @@ class CDMap extends LitElement {
 
     const animationIcons = [];
     for (let i = 0; i <= 10; i += 1) {
-      animationIcons.push(idevio.map.IconFactory.circle({ radius: 10, color: `rgba(0,0,0,${i / 10})` }));
+      animationIcons.push(idevio.map.IconFactory.circle({ radius: 10, color: `rgba(51, 204, 204, ${i / 10})` }));
     }
 
     const pulseIcon = new idevio.map.Marker(myDataset, {
@@ -106,7 +106,7 @@ class CDMap extends LitElement {
     const nonPulseIcon = new idevio.map.Marker(myDataset, {
       coordinate: [droneRoute[0].lat, droneRoute[0].lng],
       style: {
-        icon: idevio.map.IconFactory.circle({ radius: 5, color: 'rgba(0,0,0,1)' }),
+        icon: idevio.map.IconFactory.circle({ radius: 5, color: 'rgba(51, 204, 204, 1)' }),
       },
     });
 
@@ -225,7 +225,7 @@ class CDMap extends LitElement {
     const coord = [droneRoute[droneRoute.length - 1].lat, droneRoute[droneRoute.length - 1].lng];
     const animationIcons = [];
     for (let i = 0; i <= 10; i += 1) {
-      animationIcons.push(idevio.map.IconFactory.circle({ radius: 10, color: `rgba(0,0,0,${i / 10})` }));
+      animationIcons.push(idevio.map.IconFactory.circle({ radius: 10, color: `rgba(51, 204, 204, ${i / 10})` }));
     }
 
     const pulseIcon = new idevio.map.Marker(myDataset, {
@@ -239,7 +239,7 @@ class CDMap extends LitElement {
     const nonPulseIcon = new idevio.map.Marker(myDataset, {
       coordinate: coord,
       style: {
-        icon: idevio.map.IconFactory.circle({ radius: 5, color: 'rgba(0,0,0,1)' }),
+        icon: idevio.map.IconFactory.circle({ radius: 5, color: 'rgba(51, 204, 204, 1)' }),
       },
     });
 
